@@ -199,6 +199,11 @@ public class Emprestimo {
                 
                 case 2:
                     
+                    System.out.println("Selecione o amigo que deseja devolver o livro: \n");
+                    for(Emprestimo procuraEmprestimo : emprestimos) {
+                        System.out.println(procuraEmprestimo.getAmigo.getNome()+ " - " + procuraEmprestimo.getRevista().getColecao().getNome());
+                    }
+                    
                     break;
                     
                 case 3:
