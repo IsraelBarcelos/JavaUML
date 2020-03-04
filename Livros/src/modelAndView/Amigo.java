@@ -5,10 +5,12 @@ public class Amigo {
         this.nome = nome;
         this.telefone = telefone;
         this.localAmigo = localAmigo;
+        this.emprestado = false;
     }
     private String nome;
     private String telefone;
     private String localAmigo;
+    private boolean emprestado;
         
     // Getters and Setters
     public String getNome() {
@@ -28,6 +30,14 @@ public class Amigo {
     }
     public void setAocalAmigo(String localAmigo) {
         this.nome = localAmigo;
+    }
+    
+    public boolean getEmprestado() {
+        return this.emprestado;
+    }
+    
+    public void setEmprestado(boolean emprestado) {
+        this.emprestado = emprestado;
     }
     
     // Fim dos Getters and Setters
