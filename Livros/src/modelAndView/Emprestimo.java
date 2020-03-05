@@ -223,10 +223,6 @@ public class Emprestimo {
                         }
                         
                     }
-                    
-                    
-                    
-                    
                     /* LEGADO -> Tem problemas para usar em runtime
                     
                     for(Emprestimo emprestimoSelecionado : emprestimos) {
