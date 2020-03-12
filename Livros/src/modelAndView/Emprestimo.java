@@ -341,6 +341,9 @@ public class Emprestimo {
                                 }
                             }
                         }
+                        if(!loop4){
+                            System.out.println("Não foi possível anexar caixa, repita!");
+                        }
                     }while(loop4);
                     break;
                 case 4:
