@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Emprestimo {
     public Emprestimo(Date dataEmprestimo, Date dataDevolucao, Amigo amigo, Revista revista) {
@@ -147,58 +148,80 @@ public class Emprestimo {
                                     " desde "+emprestimosDisponiveis.getDataEmprestimo()+
                                     " até "+emprestimosDisponiveis.getDataDevolucao()+ "");
                         }
-                        System.out.println("Digite algo para continuar ");
-                        ler.next();
+                        System.out.println("O resultado ficará em evidencia por 3 segundos.");
+                        try{
+                            TimeUnit.SECONDS.sleep(3);
+                        }catch(InterruptedException e){
+                            e.printStackTrace();
+                        }
                     }
                     break;
                 case 1:          
                     
-                    System.out.println("Qual o numero da revista você deseja emprestar?");
-                    for(Revista revistaProcura : revistas) {
-                        System.out.print(revistaProcura.getNumeroEdicao()+" - "+ revistaProcura.getColecao().nome+ " - ");
-                        System.out.println(revistaProcura.getEstaEmprestada() ? "Emprestada " : "Liberada ");
-                    }
                     
-                    int opcao2 = Integer.parseInt(ler.nextLine());
+                    boolean loop = true;
+                    do{
+                        
+                        System.out.println("Qual o numero da revista você deseja emprestar?");
+                        for(Revista revistaProcura : revistas) {
+                            System.out.print(revistaProcura.getNumeroEdicao()+" - "+ revistaProcura.getColecao().nome+ " - ");
+                            System.out.println(revistaProcura.getEstaEmprestada() ? "Emprestada " : "Liberada ");
+                        }
                     
-                    for(Revista revistaProcura : revistas) { // encontra a revista
-                        if(opcao2 == revistaProcura.getNumeroEdicao() && revistaProcura.getEstaEmprestada() == false){
-                            Revista revistaSelecionada = revistaProcura;
-                            System.out.println("Selecione o nome do amigo: ");
-                            for(Amigo amigoProcura : amigos ) {
-                                System.out.print(amigoProcura.getNome() + " - " );
-                                System.out.println((amigoProcura.getEmprestado()) ? "Já emprestado" : "Liberado");
-                            }
-                             // importante, pois o buffer buga
-                            String opcaoNome = ler.nextLine();
-                            
-                            for(Amigo amigoProcura : amigos ) { //procura o amigo selecionado nos amigos
+                     
+                    
+                    
+                        int opcao2 = Integer.parseInt(ler.nextLine());
+                    
+                        for(Revista revistaProcura : revistas) { // encontra a revista
+                            if(opcao2 == revistaProcura.getNumeroEdicao() && revistaProcura.getEstaEmprestada() == false){
+                                Revista revistaSelecionada = revistaProcura;
+                                System.out.println("Selecione o nome do amigo: ");
                                 
-                                if(amigoProcura.getNome().equals(opcaoNome) && amigoProcura.getEmprestado() == false) { // se achar o amigo
+                                
+                                boolean loop2 = true;
+                                do{
+                                    for(Amigo amigoProcura : amigos ) {
+                                        System.out.print(amigoProcura.getNome() + " - " );
+                                        System.out.println((amigoProcura.getEmprestado()) ? "Já emprestado" : "Liberado");
+                                    }
                                     
-                                Amigo amigoSelecionado = amigoProcura;
-                                
-                                System.out.println("Digite o numero em dias a ser emprestados: ");
-                                int dias = Integer.parseInt(ler.nextLine());
-                                
-                                Date dataHoje = new Date();
-                                Calendar cal = Calendar.getInstance();
-                                cal.setTime(dataHoje);
-                                cal.add(Calendar.DATE, dias);
-                                
-                                //impede que seja alugado o mesmo livro para mais de uma pessoa e também que a mesma pessoa alugue mais de 1 livro
-                                revistaSelecionada.setEstaEmprestada(true);
-                                amigoSelecionado.setEmprestado(true);
-                                
-                                Emprestimo emprestimo = new Emprestimo(dataHoje, cal.getTime(), amigoSelecionado, revistaSelecionada );
-                                emprestimos.add(emprestimo);
-                                
-                                break;
-                                
-                                }
+
+                                    String opcaoNome = ler.nextLine();
+
+                                    for(Amigo amigoProcura : amigos ) { //procura o amigo selecionado nos amigos
+
+                                        if(amigoProcura.getNome().equals(opcaoNome) && amigoProcura.getEmprestado() == false) { // se achar o amigo
+
+                                        Amigo amigoSelecionado = amigoProcura;
+
+                                        System.out.println("Digite o numero em dias a ser emprestados: ");
+                                        int dias = Integer.parseInt(ler.nextLine());
+
+                                        Date dataHoje = new Date();
+                                        Calendar cal = Calendar.getInstance();
+                                        cal.setTime(dataHoje);
+                                        cal.add(Calendar.DATE, dias);
+
+                                        //impede que seja alugado o mesmo livro para mais de uma pessoa e também que a mesma pessoa alugue mais de 1 livro
+                                        revistaSelecionada.setEstaEmprestada(true);
+                                        amigoSelecionado.setEmprestado(true);
+
+                                        Emprestimo emprestimo = new Emprestimo(dataHoje, cal.getTime(), amigoSelecionado, revistaSelecionada );
+                                        emprestimos.add(emprestimo);
+                                        loop = false;
+                                        loop2 = false;
+
+                                        }else{
+                                            System.out.println("Não foi possivel selecionar amigo, repita");
+                                        }
+                                    }
+                                }while(loop2);
+                            }else{
+                                System.out.println("Não foi possível selecionar revista");
                             }
-                        }   
-                    }
+                        }
+                    }while(loop);
                 break;
                 
                 case 2:
@@ -223,6 +246,12 @@ public class Emprestimo {
                         }
                         
                     }
+                    
+                    try{
+                            TimeUnit.SECONDS.sleep(3);
+                        }catch(InterruptedException e){
+                            e.printStackTrace();
+                        }
                     /* LEGADO -> Tem problemas para usar em runtime
                     
                     for(Emprestimo emprestimoSelecionado : emprestimos) {
@@ -239,86 +268,95 @@ public class Emprestimo {
                     break;
                     
                 case 3:
-                    System.out.println("Vamos iniciar o processo de adicionar uma revista:  Digite o numero da edição da revista adicionada");
-                    numeroEdicao = Integer.parseInt(ler.nextLine());
                     
-                    System.out.println("Digite o ano da revista: ");
-                    anoDoLivro = Integer.parseInt(ler.nextLine());
-                    
-                    
-                    System.out.println("Se você deseja adicionar uma nova coleção digite 0, senão digite o nome da colecao a que a revista pertence: ");
-                    for(Colecao colecaoProcura: colecoes){
-                        System.out.println(colecaoProcura.getNome() + "");
-                    }
-                    String opcaoColecao = ler.nextLine();
-                    if(opcaoColecao.equals("0")){
-                        
-                        System.out.println("Agora adicione um nome para a coleção: ");
-                        nomeColecao = ler.nextLine();
-                        colecao = new Colecao(nomeColecao);
-                        
-                    }else { // caso tenha escrito o noem da colecao
-                        int i =0;
-                        for(Colecao colecaoSelecionada : colecoes ) {
-                            if( colecaoSelecionada.getNome().equals(nomeColecao)) {
-                                colecao = colecaoSelecionada;
-                                i=1;
-                            }
-                        }
-                        if(i==0){
-                            System.out.println("Colecao não encontrada, reiniciar.");
-                            break;
-                        }
-                                           
-                    }
-                    System.out.println("Digite o numero da caixa que deseja inserir o livro, caso queira adicionar uma nova digite 0");
-                    for(Caixa caixaSelecionada : caixas) {
-                            System.out.println(caixaSelecionada.getNumero() + " - " + caixaSelecionada.getIdentificacaoEtiqueta());
-                        }
-                    
-                    int opcaoCaixa = Integer.parseInt(ler.nextLine());
-                    
-                    if(opcaoCaixa == 0){
-                        System.out.println("Por favor digite o numero da caixa: ");
-                        numeroDaCaixa = Integer.parseInt(ler.nextLine());
-                        
-                        System.out.println("Por favor digite a identificação de etiqueta: ");
-                        identificacaoEtiqueta = ler.nextLine();
-                        
-                        System.out.println("Digite a cor da caixa: ");
-                        cor = ler.nextLine();
+                    boolean loop3 = true;
+                    do{
+                        System.out.println("Vamos iniciar o processo de adicionar uma revista:  Digite o numero da edição da revista adicionada");
+                        numeroEdicao = Integer.parseInt(ler.nextLine());
 
-                        caixa = new Caixa(numeroDaCaixa, identificacaoEtiqueta, cor);
-                        caixas.add(caixa);
+                        System.out.println("Digite o ano da revista: ");
+                        anoDoLivro = Integer.parseInt(ler.nextLine());
+
+
+                        System.out.println("Se você deseja adicionar uma nova coleção digite 0, senão digite o nome da colecao a que a revista pertence: ");
+
+                        for(Colecao colecaoProcura: colecoes){
+                            System.out.println(colecaoProcura.getNome() + "");
+                        }
+                        String opcaoColecao = ler.nextLine();
+                        if(opcaoColecao.equals("0")){
+
+                            System.out.println("Agora adicione um nome para a coleção: ");
+                            nomeColecao = ler.nextLine();
+                            colecao = new Colecao(nomeColecao);
+                            loop = false;
+
+                        }else { // caso tenha escrito o noem da colecao
+                            
+                            for(Colecao colecaoSelecionada : colecoes ) {
+                                if( colecaoSelecionada.getNome().equals(nomeColecao)) {
+                                    colecao = colecaoSelecionada;
+                                    loop = false;
+                                }
+                            }                   
+                        }
                         
-                        
-                        
-                        Revista revista = new Revista(numeroEdicao, anoDoLivro, caixa, colecao );
-                        revistas.add(revista);
-                    }else{ // nao vai criar novo
+                        if(!loop3){
+                            System.out.println("Não foi possível achar a coleção, digite novamente!");
+                        }
+                    }while(loop3);
+                    
+                    boolean loop4 = true;
+
+                    do{
+                        System.out.println("Digite o numero da caixa que deseja inserir o livro, caso queira adicionar uma nova digite 0");
                         for(Caixa caixaSelecionada : caixas) {
-                            if(caixaSelecionada.getNumero() == opcaoCaixa ) {
-                                Revista revista = new Revista(numeroEdicao, anoDoLivro, caixaSelecionada, colecao );
-                                revistas.add(revista);
+                                System.out.println(caixaSelecionada.getNumero() + " - " + caixaSelecionada.getIdentificacaoEtiqueta());
+                            }
+
+                        int opcaoCaixa = Integer.parseInt(ler.nextLine());
+
+                        if(opcaoCaixa == 0){
+                            System.out.println("Por favor digite o numero da caixa: ");
+                            numeroDaCaixa = Integer.parseInt(ler.nextLine());
+
+                            System.out.println("Por favor digite a identificação de etiqueta: ");
+                            identificacaoEtiqueta = ler.nextLine();
+
+                            System.out.println("Digite a cor da caixa: ");
+                            cor = ler.nextLine();
+
+                            caixa = new Caixa(numeroDaCaixa, identificacaoEtiqueta, cor);
+                            caixas.add(caixa);
+                            
+                            Revista revista = new Revista(numeroEdicao, anoDoLivro, caixa, colecao );
+                            revistas.add(revista);
+                            loop4 = false;
+                        }else{ // nao vai criar novo
+                            for(Caixa caixaSelecionada : caixas) {
+                                if(caixaSelecionada.getNumero() == opcaoCaixa ) {
+                                    Revista revista = new Revista(numeroEdicao, anoDoLivro, caixaSelecionada, colecao );
+                                    revistas.add(revista);
+                                    loop4 = false;
+                                }
                             }
                         }
-                    }
-   
+                    }while(loop4);
                     break;
                 case 4:
                     
-                    System.out.println("Por favor digite o numero da caixa: ");
-                       numeroDaCaixa = Integer.parseInt(ler.nextLine());
-                     
-                       System.out.println("Por favor digite a identificação de etiqueta: ");
-                       identificacaoEtiqueta = ler.nextLine();
+                        System.out.println("Por favor digite o numero da caixa: ");
+                           numeroDaCaixa = Integer.parseInt(ler.nextLine());
 
-                       System.out.println("Digite a cor da caixa: ");
-                       cor = ler.nextLine();
+                           System.out.println("Por favor digite a identificação de etiqueta: ");
+                           identificacaoEtiqueta = ler.nextLine();
 
-                       caixa = new Caixa(numeroDaCaixa, identificacaoEtiqueta, cor);
-                       caixas.add(caixa);
-                    
+                           System.out.println("Digite a cor da caixa: ");
+                           cor = ler.nextLine();
+
+                           caixa = new Caixa(numeroDaCaixa, identificacaoEtiqueta, cor);
+                           caixas.add(caixa);
+                           
                     break;
                 
                 case 5:
